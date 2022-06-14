@@ -1,7 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { Template } = require("webpack");
-const { PassThrough } = require("stream");
 
 module.exports = {
   // Set mode
@@ -16,6 +14,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].[contenthash].js",
+    clean: true,
+    assetModuleFilename: "[name][ext]",
   },
 
   //Webpack dev server
@@ -40,6 +40,21 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+      {
+        test: /\.(svg|eot|woff|woff2|ttf)$/i,
+        type: "asset/resource",
+        use: "file-loader",
       },
     ],
   },
